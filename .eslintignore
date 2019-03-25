@@ -1,0 +1,9 @@
+/build/
+/config/
+/dist/
+/libraries/
+/obj/
+/src/assets/
+/src/store/
+/static/
+/*.js
