@@ -1,67 +1,66 @@
 <template>
   <div class="todo-list">
     <h1>Todo App</h1>
-    <h3
-      v-if="todoItems > 0"
-    >Currently {{ todoItems }} todo {{todoItems === 1 ? 'item' : 'items'}} in the list</h3>
-    <div class="todo-add-item">
-      <input
-        v-model="newTodo"
-        type="text"
-        placeholder="Add Item"
-        class="todo-input"
-        @keyup.enter="addTodo"
-      >
-      <button class="btn btn-add-todo" @click="addTodo">
-        <i class="fas fa-plus"></i> Add
-      </button>
-    </div>
+    <h3 v-if="hasItems">{{ listTitle }}</h3>
+    <ToDoAddItem @add="addTodo($event)"/>
     <div class="todo-items">
-      <todo
-        v-for="(todoItem, index) in todoData"
-        :key="todoItem.title + index"
+      <ToDoItem
+        v-for="(todoItem, index) in list"
+        :key="todoItem.id"
         :todo="todoItem"
         @delete="deleteTodo(index)"
         @complete="completeTodo(todoItem)"
+        @save="saveTodo(todoItem, $event)"
       />
     </div>
   </div>
 </template>
 
 <script>
-import Todo from './components/Todo.vue'
+import ToDoItem from './ToDoItem.vue'
+import ToDoAddItem from './ToDoAddItem.vue'
 
 export default {
   name: 'TodoList',
   components: {
-    Todo
+    ToDoItem,
+    ToDoAddItem
   },
   data() {
     return {
-      todoData: [
+      list: [
         {
           title: 'Clean the house',
-          completed: true
+          completed: true,
+          id: '123678345'
         },
         {
           title: 'Walk the dog',
-          completed: false
+          completed: false,
+          id: '678234567'
         },
         {
           title: 'Wash the car',
-          completed: false
+          completed: false,
+          id: '789345678'
         },
         {
           title: 'Do laundry',
-          completed: false
+          completed: false,
+          id: '6783478'
         }
-      ],
-      newTodo: ''
+      ]
     }
   },
   computed: {
     todoItems() {
-      return this.todoData.length
+      return this.list.length
+    },
+    hasItems() {
+      return this.todoItems > 0
+    },
+    listTitle() {
+      return `Currently ${this.todoItems} todo ${this.todoItems === 1 ? 'item' : 'items'} in the list`
     }
   },
   watch: {
@@ -73,20 +72,20 @@ export default {
     console.log('This item was created')
   },
   methods: {
-    addTodo() {
-      if (this.newTodo) {
-        this.todoData.push({
-          title: this.newTodo,
-          completed: false
-        })
-        this.newTodo = ''
-      }
+    addTodo(value) {
+      this.list.push({
+        title: value,
+        completed: false
+      })
     },
     deleteTodo(index) {
-      this.todoData.splice(index, 1)
+      this.list.splice(index, 1)
     },
     completeTodo(item) {
       item.completed = !item.completed
+    },
+    saveTodo(item, value) {
+      item.title = value
     }
   }
 }
@@ -118,7 +117,7 @@ export default {
   padding: 0 70px 0 15px;
 }
 .btn-add-todo {
-  height: 30px;
+  width: 60px;
   background-color: #2199e8;
   color: #fefefe;
   border: none;
@@ -134,4 +133,3 @@ export default {
   background-color: #1583cc;
 }
 </style>
-

@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <todo-list/>
+    <TodoList/>
   </div>
 </template>
 
 <script>
-import TodoList from './components/todo-list/TodoList.vue'
+import TodoList from './components/TodoList.vue'
 
 export default {
   name: 'App',
@@ -31,5 +31,8 @@ body {
   width: 100%;
   height: 100%;
   padding: 20px;
+}
+h3 {
+  margin: 0;
 }
 </style>
