@@ -2,29 +2,30 @@
   <div class="todo-list">
     <h1>Todo App</h1>
     <h3 v-if="hasItems">{{ listTitle }}</h3>
-    <ToDoAddItem @add="addTodo($event)"/>
+    <TodoAddItem @add="add($event)"/>
     <div class="todo-items">
-      <ToDoItem
-        v-for="(todoItem, index) in list"
-        :key="todoItem.id"
-        :todo="todoItem"
-        @delete="deleteTodo(index)"
-        @complete="completeTodo(todoItem)"
-        @save="saveTodo(todoItem, $event)"
+      <TodoItem
+        v-for="(item, i) in list"
+        :key="item.id"
+        :title="item.title"
+        :completed="item.completed"
+        @save="save(item, $event)"
+        @complete="complete(item)"
+        @delete="deleteItem(i)"
       />
     </div>
   </div>
 </template>
 
 <script>
-import ToDoItem from './ToDoItem.vue'
-import ToDoAddItem from './ToDoAddItem.vue'
+import TodoItem from './TodoItem.vue'
+import TodoAddItem from './TodoAddItem.vue'
 
 export default {
   name: 'TodoList',
   components: {
-    ToDoItem,
-    ToDoAddItem
+    TodoItem,
+    TodoAddItem
   },
   data() {
     return {
@@ -53,18 +54,18 @@ export default {
     }
   },
   computed: {
-    todoItems() {
+    items() {
       return this.list.length
     },
     hasItems() {
-      return this.todoItems > 0
+      return this.items > 0
     },
     listTitle() {
-      return `Currently ${this.todoItems} todo ${this.todoItems === 1 ? 'item' : 'items'} in the list`
+      return `Currently ${this.items} todo ${this.items === 1 ? 'item' : 'items'} in the list`
     }
   },
   watch: {
-    todoItems(newVal, OldVal) {
+    items(newVal, OldVal) {
       console.log(`Watching for todoItems. New Items length ${newVal} and Old Items length ${OldVal}`)
     }
   },
@@ -72,20 +73,26 @@ export default {
     console.log('This item was created')
   },
   methods: {
-    addTodo(value) {
+    add(val) {
       this.list.push({
-        title: value,
-        completed: false
+        title: val,
+        completed: false,
+        id: this.getRandom(1000, 100000000000000).toString()
       })
     },
-    deleteTodo(index) {
-      this.list.splice(index, 1)
+    deleteItem(i) {
+      this.list.splice(i, 1)
     },
-    completeTodo(item) {
+    complete(item) {
       item.completed = !item.completed
     },
-    saveTodo(item, value) {
-      item.title = value
+    save(item, val) {
+      item.title = val
+    },
+    getRandom(min, max) {
+      min = Math.ceil(min)
+      max = Math.floor(max)
+      return Math.floor(Math.random() * (max - min + 1)) + min
     }
   }
 }

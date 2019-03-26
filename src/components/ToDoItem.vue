@@ -1,11 +1,11 @@
 <template>
-  <div :class="{'item_is-completed' : todo.completed }" class="item">
+  <div :class="{'item_is-completed' : completed }" class="item">
     <div v-show="!isEditing" class="item__show">
       <div class="btn_complete" @click="$emit('complete')">
-        <h3>{{ todo.title }}</h3>
+        <h3>{{ title }}</h3>
       </div>
       <div class="btn__group">
-        <button v-if="!todo.completed" class="btn btn_edit" @click="toggleForm">
+        <button v-if="!completed" class="btn btn_edit" @click="toggleForm">
           <i class="fas fa-edit"></i>
         </button>
         <button class="btn btn_delete" @click="$emit('delete')">
@@ -14,14 +14,9 @@
       </div>
     </div>
     <div v-show="isEditing" class="item__edit">
-      <form id="edit-form" @submit.prevent="editTodo">
+      <form id="edit-form" @submit.prevent="edit">
         <div class="edit-input">
-          <input
-            :value="todoNewValue = todo.title"
-            type="text"
-            class="todo-input"
-            @input="todoNewValue = $event.target.value"
-          >
+          <input v-model="newValue" type="text" class="todo-input">
         </div>
         <div class="btn__group">
           <button class="btn btn_save" type="submit">
@@ -38,25 +33,30 @@
 
 <script>
 export default {
-  name: 'ToDo',
+  name: 'Todo',
   props: {
-    todo: {
-      type: Object,
+    title: {
+      type: String,
+      required: true
+    },
+    completed: {
+      type: Boolean,
       required: true
     }
   },
   data() {
     return {
       isEditing: false,
-      todoNewValue: ''
+      newValue: ''
     }
   },
   methods: {
-    editTodo() {
-      this.$emit('save', this.todoNewValue)
+    edit() {
+      this.$emit('save', this.newValue)
       this.isEditing = false
     },
     toggleForm() {
+      if (!this.isEditing) this.newValue = this.title
       this.isEditing = !this.isEditing
     }
   }

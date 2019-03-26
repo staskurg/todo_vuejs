@@ -1,7 +1,7 @@
 <template>
   <div class="todo-add-item">
-    <form id="add-form" @submit.prevent="addTodo">
-      <input v-model="newTodo" type="text" placeholder="Add Item" class="todo-input" name="todo">
+    <form id="add-form" @submit.prevent="add">
+      <input v-model="item" type="text" placeholder="Add Item" class="todo-input" name="todo">
       <button type="submit" class="btn btn-add-todo">
         <i class="fas fa-plus"></i> Add
       </button>
@@ -13,13 +13,13 @@
 export default {
   data() {
     return {
-      newTodo: ''
+      item: ''
     }
   },
   methods: {
-    addTodo() {
-      if (this.newTodo !== '') this.$emit('add', this.newTodo)
-      this.newTodo = ''
+    add() {
+      if (this.item !== '') this.$emit('add', this.item)
+      this.item = ''
     }
   }
 }
